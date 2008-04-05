@@ -9,20 +9,17 @@ import com.playground_soft.tools.font.ui.FontListCellRenderer;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
