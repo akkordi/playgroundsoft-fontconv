@@ -3,7 +3,6 @@
  *
  * Created on April 5, 2008, 1:42 PM
  */
-
 package com.playground_soft.tools.font;
 
 import java.io.IOException;
@@ -20,22 +19,23 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author  Administrator
  */
 public class ConfigurationDlg extends javax.swing.JDialog {
+
     private UIManager.LookAndFeelInfo lnfInfos[];
-    
+
     /** Creates new form ConfigurationDlg */
     public ConfigurationDlg(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         lnfInfos = UIManager.getInstalledLookAndFeels();
         Vector<String> lnfNames = new Vector<String>();
-        for(UIManager.LookAndFeelInfo info : lnfInfos){
+        for (UIManager.LookAndFeelInfo info : lnfInfos) {
             lnfNames.add((info.getName()));
         }
         lnfCb.setModel(new javax.swing.DefaultComboBoxModel(lnfNames));
         LookAndFeel currentLnF = UIManager.getLookAndFeel();
         lnfCb.setSelectedItem(currentLnF.getName());
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -122,7 +122,6 @@ public class ConfigurationDlg extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             String lnfName = (String) lnfCb.getSelectedItem();
@@ -146,21 +145,23 @@ public class ConfigurationDlg extends javax.swing.JDialog {
             }
             Configuration.save();
         } catch (IOException ex) {
-             JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(ConfigurationDlg.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 ConfigurationDlg dialog = new ConfigurationDlg(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
@@ -169,7 +170,6 @@ public class ConfigurationDlg extends javax.swing.JDialog {
             }
         });
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -179,5 +179,4 @@ public class ConfigurationDlg extends javax.swing.JDialog {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JComboBox lnfCb;
     // End of variables declaration//GEN-END:variables
-    
 }
