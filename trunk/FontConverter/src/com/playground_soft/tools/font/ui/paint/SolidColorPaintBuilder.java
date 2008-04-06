@@ -115,5 +115,10 @@ public class SolidColorPaintBuilder extends javax.swing.JDialog implements Paint
     public DialogResult getDialogResult() {
         return result;
     }
+
+    @Override
+    public String toString() {
+       return "Solid Color";
+    }
     
 }

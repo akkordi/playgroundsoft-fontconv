@@ -16,43 +16,49 @@
  */
 package com.playground_soft.tools.font.ui;
 
+import com.playground_soft.tools.font.GlyphRenderer;
 import javax.swing.*;
 import java.awt.*;
 
 public class FontPanel extends JPanel {
-	private static final long serialVersionUID = -4301477046578935597L;
+    GlyphPanel glyphPanels[];
 
-	GlyphPanel glyphPanels[];
+    public FontPanel() {
+        setLayout(new GridLayout(0, 8, 5, 5));
+        glyphPanels = new GlyphPanel[0x80];
+        FontMetrics metrics = this.getFontMetrics(this.getFont());
+        Dimension d = new Dimension(metrics.getHeight() * 4, metrics.getHeight() * 4);
+        for (int i = 0; i < glyphPanels.length; i++) {
+            glyphPanels[i] = new GlyphPanel(i);
+            glyphPanels[i].setPreferredSize(d);
+            this.add(glyphPanels[i]);
+        }
+        this.invalidate();
+    }
 
-	public FontPanel() {
-		setLayout(new GridLayout(0, 8, 5, 5));
-		glyphPanels = new GlyphPanel[0x80];
-		FontMetrics metrics = this.getFontMetrics(this.getFont());
-		Dimension d = new Dimension(metrics.getHeight()*4,metrics.getHeight()*4);
-		for (int i = 0; i < glyphPanels.length; i++) {
-			glyphPanels[i] = new GlyphPanel(i);
-			glyphPanels[i].setPreferredSize(d);
-			this.add(glyphPanels[i]);
-		}
-		this.invalidate();
-	}
+    public void setDisplayFont(Font font) {
+        FontMetrics metrics = this.getFontMetrics(font);
+        Dimension d = new Dimension(metrics.getHeight(), metrics.getHeight());
+        for (GlyphPanel panel : glyphPanels) {
+            panel.setFont(font);
+            panel.setPreferredSize(d);
+        }
+        this.invalidate();
+    }
 
-	public void setDisplayFont(Font font) {
-		FontMetrics metrics = this.getFontMetrics(font);
-		Dimension d = new Dimension(metrics.getHeight(),metrics.getHeight());
-		for (int i = 0; i < glyphPanels.length; i++) {
-			glyphPanels[i].setFont(font);
-			glyphPanels[i].setPreferredSize(d);
-		}
-		this.invalidate();
-	}
+    public void setGlyphRenderer(GlyphRenderer renderer){
+        for(GlyphPanel panel : glyphPanels){
+            panel.setRenderer(new GlyphRenderer(renderer));
+            
+        }
+    }
+    
+    public Image[] getGlyphImage() {
+        Image[] output = new Image[glyphPanels.length];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = glyphPanels[i].getGlyphImage();
+        }
 
-	public Image[] getGlyphImage(){
-		Image[] output = new Image[glyphPanels.length];
-		for(int i = 0;i<output.length;i++){
-			output[i] = glyphPanels[i].getGlyphImage();
-		}
-		
-		return output;
-	}
+        return output;
+    }
 }
