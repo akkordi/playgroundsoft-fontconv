@@ -5,12 +5,19 @@
  */
 package com.playground_soft.tools.font;
 
+import com.playground_soft.tools.font.ui.DialogResult;
+import com.playground_soft.tools.font.ui.EnumModel;
 import com.playground_soft.tools.font.ui.FontListCellRenderer;
+import com.playground_soft.tools.font.ui.PaintBuilderModel;
+import com.playground_soft.tools.font.ui.StandardDlg;
+import com.playground_soft.tools.font.ui.StrokeCapEnum;
+import com.playground_soft.tools.font.ui.StrokeJoinEnum;
 import com.playground_soft.tools.font.ui.paint.PaintBuilder;
-import com.playground_soft.tools.font.ui.paint.SolidColorPaintBuilder;
+import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Paint;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,22 +38,35 @@ import javax.swing.UIManager;
 public class MainFrame extends javax.swing.JFrame {
 
     private Font[] fonts = null;
-    private PaintBuilder fillBuilder = null;
+    private PaintBuilder fillPaintBuilder = null;
+    private PaintBuilder borderPaintBuilder = null;
+
     /** Creates new form MainFrame2 */
     public MainFrame() {
         try {
             Configuration.init();
             String lnfname = Configuration.get("LookAndFeelClassname");
-            if(lnfname != null){
-                 UIManager.setLookAndFeel(lnfname);
+            if (lnfname != null) {
+                UIManager.setLookAndFeel(lnfname);
             }
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             fonts = ge.getAllFonts();
             initComponents();
+            fillPaintCb.setModel(new PaintBuilderModel(this));
+            fillPaintCb.setSelectedIndex(0);
+
+            borderPaintCb.setModel(new PaintBuilderModel(this));
+            borderPaintCb.setSelectedIndex(0);
+
+            borderCapCb.setModel(new EnumModel<StrokeCapEnum>(StrokeCapEnum.class));
+            borderCapCb.setSelectedIndex(0);
+            
+            borderJoinCb.setModel(new EnumModel<StrokeJoinEnum>(StrokeJoinEnum.class));
+            borderJoinCb.setSelectedIndex(0);
+            
             updateFontPnl();
-            fillTypeCb.setSelectedIndex(0);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -62,20 +82,32 @@ public class MainFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jButton1 = new javax.swing.JButton();
-        jToolBar2 = new javax.swing.JToolBar();
-        jLabel1 = new javax.swing.JLabel();
-        fontListCb = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        sizeSpn = new javax.swing.JSpinner();
         jScrollPane1 = new javax.swing.JScrollPane();
         fontPnl = new com.playground_soft.tools.font.ui.FontPanel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        fillTypeCb = new javax.swing.JComboBox();
-        jComboBox2 = new javax.swing.JComboBox();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        configPnl1 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        fontListCb = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        sizeSpn = new javax.swing.JSpinner();
+        jLabel10 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        fillPaintCb = new javax.swing.JComboBox();
         fillOptionBtn = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        borderPaintCb = new javax.swing.JComboBox();
+        borderPaintOptionBtn = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        borderWidthSpn = new javax.swing.JSpinner();
+        jLabel14 = new javax.swing.JLabel();
+        borderCapCb = new javax.swing.JComboBox();
+        jLabel15 = new javax.swing.JLabel();
+        borderJoinCb = new javax.swing.JComboBox();
+        jLabel16 = new javax.swing.JLabel();
+        borderMiterSpn = new javax.swing.JSpinner();
+        updateBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -112,47 +144,60 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jToolBar1.add(jButton1);
 
-        jToolBar2.setFloatable(false);
-        jToolBar2.setRollover(true);
-
-        jLabel1.setText("Font");
-        jToolBar2.add(jLabel1);
-
-        fontListCb.setModel(new DefaultComboBoxModel(fonts) );
-        fontListCb.setRenderer(new FontListCellRenderer());
-        fontListCb.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fontListCbActionPerformed(evt);
-            }
-        });
-        jToolBar2.add(fontListCb);
-
-        jLabel2.setText("Size");
-        jToolBar2.add(jLabel2);
-
-        sizeSpn.setModel(new javax.swing.SpinnerNumberModel(24.0d, 0.0d, 255.0d, 0.10000000149011612d));
-        sizeSpn.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                sizeSpnStateChanged(evt);
-            }
-        });
-        jToolBar2.add(sizeSpn);
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createTitledBorder("Preview"));
 
         fontPnl.setName("fontPnl"); // NOI18N
         jScrollPane1.setViewportView(fontPnl);
 
-        jLabel3.setText("Fill :");
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Font"));
 
-        jLabel4.setText("Border:");
+        fontListCb.setModel(new DefaultComboBoxModel(fonts) );
+        fontListCb.setRenderer(new FontListCellRenderer());
 
-        fillTypeCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Solid Color" }));
-        fillTypeCb.addActionListener(new java.awt.event.ActionListener() {
+        jLabel9.setText("Font");
+
+        sizeSpn.setModel(new javax.swing.SpinnerNumberModel(24.0d, 0.0d, 255.0d, 0.10000000149011612d));
+
+        jLabel10.setText("Size");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fontListCb, 0, 194, Short.MAX_VALUE)
+                    .addComponent(sizeSpn, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(fontListCb, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(sizeSpn, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Fill"));
+
+        jLabel11.setText("Paint");
+
+        fillPaintCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fillPaintCb.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fillTypeCbActionPerformed(evt);
+                fillPaintCbActionPerformed(evt);
             }
         });
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         fillOptionBtn.setText("Option...");
         fillOptionBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -161,7 +206,159 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Option...");
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fillPaintCb, 0, 196, Short.MAX_VALUE))
+                    .addComponent(fillOptionBtn, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(fillPaintCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fillOptionBtn)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Border"));
+
+        jLabel12.setText("Paint");
+
+        borderPaintCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        borderPaintCb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                borderPaintCbActionPerformed(evt);
+            }
+        });
+
+        borderPaintOptionBtn.setText("Option...");
+        borderPaintOptionBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                borderPaintOptionBtnActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Width");
+
+        borderWidthSpn.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(0.01f)));
+
+        jLabel14.setText("Cap");
+
+        borderCapCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel15.setText("Joint");
+
+        borderJoinCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        borderJoinCb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                borderJoinCbActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Mitter Limit");
+
+        borderMiterSpn.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(1.0f), Float.valueOf(1.0f), null, Float.valueOf(0.01f)));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(borderPaintOptionBtn, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel16)
+                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel8Layout.createSequentialGroup()
+                                    .addComponent(jLabel12)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(borderCapCb, 0, 168, Short.MAX_VALUE)
+                            .addComponent(borderWidthSpn, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                            .addComponent(borderPaintCb, 0, 168, Short.MAX_VALUE)
+                            .addComponent(borderJoinCb, 0, 168, Short.MAX_VALUE)
+                            .addComponent(borderMiterSpn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(borderPaintCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(borderPaintOptionBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(borderWidthSpn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(borderCapCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(borderJoinCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(borderMiterSpn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+
+        updateBtn.setText("Update");
+        updateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout configPnl1Layout = new javax.swing.GroupLayout(configPnl1);
+        configPnl1.setLayout(configPnl1Layout);
+        configPnl1Layout.setHorizontalGroup(
+            configPnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configPnl1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(configPnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(updateBtn, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        configPnl1Layout.setVerticalGroup(
+            configPnl1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configPnl1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(updateBtn)
+                .addContainerGap(83, Short.MAX_VALUE))
+        );
+
+        jScrollPane2.setViewportView(configPnl1);
 
         jMenu1.setText("File");
 
@@ -212,25 +409,11 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3))
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 1086, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 782, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fillTypeCb, 0, 275, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3)
-                    .addComponent(fillOptionBtn))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -238,35 +421,14 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fillTypeCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(fillOptionBtn)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jButton3)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void fontListCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontListCbActionPerformed
-        updateFontPnl();
-        fontListCb.setFont(((Font) fontListCb.getSelectedItem()).deriveFont(16.0f));
-    }//GEN-LAST:event_fontListCbActionPerformed
-
-    private void sizeSpnStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sizeSpnStateChanged
-        updateFontPnl();
-    }//GEN-LAST:event_sizeSpnStateChanged
-
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         new AboutDialog(this, true).setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -298,53 +460,84 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_exportActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-       new ConfigurationDlg(this,true).setVisible(true);
-       SwingUtilities.updateComponentTreeUI(this) ;
+        new ConfigurationDlg(this, true).setVisible(true);
+        SwingUtilities.updateComponentTreeUI(this);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void fillTypeCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillTypeCbActionPerformed
-        int fillType = fillTypeCb.getSelectedIndex();
-        switch(fillType){
-            case 0: 
-                fillBuilder = new SolidColorPaintBuilder(this,true);
-                break;
-        }
-    }//GEN-LAST:event_fillTypeCbActionPerformed
-
     private void fillOptionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillOptionBtnActionPerformed
-        ((JDialog)fillBuilder).setVisible(true);
-    }//GEN-LAST:event_fillOptionBtnActionPerformed
+        ((JDialog)fillPaintBuilder).setVisible(true);
+}//GEN-LAST:event_fillOptionBtnActionPerformed
+
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
+        this.updateFontPnl();
+    }//GEN-LAST:event_updateBtnActionPerformed
+
+    private void fillPaintCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fillPaintCbActionPerformed
+       fillPaintBuilder = (PaintBuilder)fillPaintCb.getSelectedItem();
+}//GEN-LAST:event_fillPaintCbActionPerformed
+
+    private void borderPaintCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borderPaintCbActionPerformed
+        borderPaintBuilder = (PaintBuilder)borderPaintCb.getSelectedItem();
+    }//GEN-LAST:event_borderPaintCbActionPerformed
+
+    private void borderPaintOptionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borderPaintOptionBtnActionPerformed
+        ((JDialog)borderPaintBuilder).setVisible(true);
+    }//GEN-LAST:event_borderPaintOptionBtnActionPerformed
+
+    private void borderJoinCbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borderJoinCbActionPerformed
+        borderMiterSpn.setEnabled(((StrokeJoinEnum)borderJoinCb.getSelectedItem()) == StrokeJoinEnum.Miter);
+}//GEN-LAST:event_borderJoinCbActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-        
+
             public void run() {
                 new MainFrame().setVisible(true);
             }
         });
     }
-    
+
     private void updateFontPnl() {
         float size = ((Double) sizeSpn.getValue()).floatValue();
         Font font = (Font) fontListCb.getSelectedItem();
         fontPnl.setDisplayFont(font.deriveFont(size));
+        
+        BasicStroke stroke = new BasicStroke(
+                ((Float)borderWidthSpn.getValue()).floatValue(),
+                ((StrokeCapEnum)(borderCapCb.getSelectedItem())).getValue(),
+                ((StrokeJoinEnum)(borderJoinCb.getSelectedItem())).getValue(),
+                ((Float)this.borderMiterSpn.getValue()).floatValue()
+                );
+        GlyphRenderer renderer = new GlyphRenderer(fillPaintBuilder.getPaint(),
+                borderPaintBuilder.getPaint(),
+                stroke);
+        fontPnl.setGlyphRenderer(renderer);
         fontPnl.repaint();
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox borderCapCb;
+    private javax.swing.JComboBox borderJoinCb;
+    private javax.swing.JSpinner borderMiterSpn;
+    private javax.swing.JComboBox borderPaintCb;
+    private javax.swing.JButton borderPaintOptionBtn;
+    private javax.swing.JSpinner borderWidthSpn;
+    private javax.swing.JPanel configPnl1;
     private javax.swing.JButton fillOptionBtn;
-    private javax.swing.JComboBox fillTypeCb;
+    private javax.swing.JComboBox fillPaintCb;
     private javax.swing.JComboBox fontListCb;
     private com.playground_soft.tools.font.ui.FontPanel fontPnl;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
@@ -353,12 +546,15 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar2;
     private javax.swing.JSpinner sizeSpn;
+    private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 }
