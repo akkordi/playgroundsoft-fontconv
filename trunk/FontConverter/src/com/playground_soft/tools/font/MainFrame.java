@@ -5,11 +5,9 @@
  */
 package com.playground_soft.tools.font;
 
-import com.playground_soft.tools.font.ui.DialogResult;
 import com.playground_soft.tools.font.ui.EnumModel;
 import com.playground_soft.tools.font.ui.FontListCellRenderer;
 import com.playground_soft.tools.font.ui.PaintBuilderModel;
-import com.playground_soft.tools.font.ui.StandardDlg;
 import com.playground_soft.tools.font.ui.StrokeCapEnum;
 import com.playground_soft.tools.font.ui.StrokeJoinEnum;
 import com.playground_soft.tools.font.ui.paint.PaintBuilder;
@@ -17,7 +15,6 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Paint;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
