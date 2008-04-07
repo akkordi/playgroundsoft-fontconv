@@ -21,6 +21,7 @@ public class PaintBuilderModel extends AbstractListModel implements ComboBoxMode
 
     public PaintBuilderModel(JFrame parent) {
         builder.add(new SolidColorPaintBuilder(parent, true));
+        builder.add(new GradientPaintBuilder(parent,true));
     }
 
     public int getSize() {
