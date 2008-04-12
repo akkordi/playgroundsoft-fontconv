@@ -9,6 +9,6 @@ import java.awt.Paint;
  *
  * @author Administrator
  */
-public interface PaintBuilder {
+public interface PaintFactory {
     public Paint getPaint();
 }

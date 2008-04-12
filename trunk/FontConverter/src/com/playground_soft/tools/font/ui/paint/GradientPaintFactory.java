@@ -16,7 +16,7 @@ import java.awt.geom.Point2D;
  *
  * @author  Administrator
  */
-public class GradientPaintBuilder extends javax.swing.JDialog implements PaintBuilder{
+public class GradientPaintFactory extends javax.swing.JDialog implements PaintFactory{
     
     /** Creates new form GradientPaintBuilder */
     private Point2D.Float point1 = new Point2D.Float();
@@ -30,7 +30,7 @@ public class GradientPaintBuilder extends javax.swing.JDialog implements PaintBu
     
     private GradientPaint value;
     
-    public GradientPaintBuilder(java.awt.Frame parent, boolean modal) {
+    public GradientPaintFactory(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         
@@ -321,7 +321,7 @@ public class GradientPaintBuilder extends javax.swing.JDialog implements PaintBu
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                GradientPaintBuilder dialog = new GradientPaintBuilder(new javax.swing.JFrame(), true);
+                GradientPaintFactory dialog = new GradientPaintFactory(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);

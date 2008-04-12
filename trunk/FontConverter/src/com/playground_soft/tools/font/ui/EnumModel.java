@@ -15,10 +15,16 @@ import javax.swing.ComboBoxModel;
  */
 public class EnumModel<E> extends AbstractListModel implements ComboBoxModel{
 
-    private E selected = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5555435042885474027L;
+	private E selected = null;
     private E[] values = null;
     
-    public EnumModel(Class enumClass){
+ 
+    @SuppressWarnings("unchecked")
+	public EnumModel(Class enumClass){
         values = (E[]) EnumSet.allOf(enumClass).toArray();
     }
     public int getSize() {
@@ -29,7 +35,8 @@ public class EnumModel<E> extends AbstractListModel implements ComboBoxModel{
         return values[index];
     }
 
-    public void setSelectedItem(Object anItem) {
+    @SuppressWarnings("unchecked")
+	public void setSelectedItem(Object anItem) {
         selected = (E)anItem;
     }
 
