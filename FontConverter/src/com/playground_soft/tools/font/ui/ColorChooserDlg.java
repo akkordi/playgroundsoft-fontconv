@@ -37,6 +37,7 @@ public class ColorChooserDlg extends javax.swing.JDialog {
     private void initComponents() {
 
         colorChooser = new javax.swing.JColorChooser();
+        colorChooser.setColor(value);
         cancelBtn = new javax.swing.JButton();
         okBtn = new javax.swing.JButton();
 

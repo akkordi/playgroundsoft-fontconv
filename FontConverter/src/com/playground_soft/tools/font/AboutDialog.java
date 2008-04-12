@@ -7,7 +7,6 @@
 package com.playground_soft.tools.font;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.logging.Level;
@@ -19,7 +18,12 @@ import java.util.logging.Logger;
  */
 public class AboutDialog extends javax.swing.JDialog {
     
-    /** Creates new form AboutDialog */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8225921908950738806L;
+
+	/* Creates new form AboutDialog */
     public AboutDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -141,23 +145,6 @@ public class AboutDialog extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AboutDialog dialog = new AboutDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
     
     private String loadGplText() {
         StringBuilder builder = new StringBuilder();

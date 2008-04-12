@@ -12,9 +12,9 @@ import javax.swing.JFrame;
  *
  * @author Administrator
  */
-public class SolidColorPaintBuilder extends ColorChooserDlg implements PaintBuilder {
+public class SolidColorPaintFactory extends ColorChooserDlg implements PaintFactory {
 
-    public SolidColorPaintBuilder(JFrame parent, boolean modal) {
+    public SolidColorPaintFactory(JFrame parent, boolean modal) {
         super(parent, modal);
     }
 
