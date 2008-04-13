@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +53,10 @@ import com.playground_soft.tools.font.ui.paint.PaintFactory;
 import com.playground_soft.tools.font.ui.paint.PaintFactoryModel;
 
 import org.jdesktop.swingx.*;
+import org.jdesktop.swingx.error.ErrorInfo;
 import org.jvnet.substance.*;
+import org.jvnet.substance.skin.SkinInfo;
+import org.jvnet.substance.theme.ThemeInfo;
 
 /**
  * 
@@ -70,6 +74,7 @@ public class MainFrame extends JXFrame implements ActionListener {
 	private JMenu helpMenu;
 
 	private JMenuItem exportMenuItem;
+	private JMenuItem prefMenuItem;
 	private JMenuItem exitMenuItem;
 	private JMenuItem aboutMenuItem;
 
@@ -78,13 +83,20 @@ public class MainFrame extends JXFrame implements ActionListener {
 	/** Creates new form MainFrame */
 	public MainFrame() {
 		try {
+			Configuration.init();
 			initComponents();
 			updateFontPnl();
 		} catch (Exception ex) {
+			/*
+			ErrorInfo info = new ErrorInfo("Error", "Unable to create GUI", 
+					null, null, ex, Level.SEVERE, null);
+			JXErrorPane.showDialog(this, info);*/
+			
 			JOptionPane.showMessageDialog(this, ex.getMessage(), "Error",
 					JOptionPane.ERROR_MESSAGE);
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null,
 					ex);
+			this.dispose();
 		}
 	}
 
@@ -97,7 +109,10 @@ public class MainFrame extends JXFrame implements ActionListener {
 	private void initComponents() throws UnsupportedLookAndFeelException {
 		// Set Substance Look and Feel
 		SubstanceLookAndFeel lookAndFeel = new SubstanceLookAndFeel();
-
+		Map<String, SkinInfo> skins = SubstanceLookAndFeel.getAllSkins();
+		String currentSkinName = Configuration.get("SkinName");
+		
+		SubstanceLookAndFeel.setSkin(skins.get(currentSkinName).getClassName());
 		UIManager.setLookAndFeel(lookAndFeel);
 
 		SwingUtilities.updateComponentTreeUI(this);
@@ -114,6 +129,9 @@ public class MainFrame extends JXFrame implements ActionListener {
 		fileMenu.add(exportMenuItem);
 		exportMenuItem.addActionListener(this);
 		fileMenu.add(new JSeparator());
+		prefMenuItem = new JMenuItem("Preference");
+		prefMenuItem.addActionListener(this);
+		fileMenu.add(prefMenuItem);
 		exitMenuItem = new JMenuItem("Exit");
 		exitMenuItem.addActionListener(this);
 		fileMenu.add(exitMenuItem);
@@ -186,6 +204,9 @@ public class MainFrame extends JXFrame implements ActionListener {
 			this.dispose();
 		} else if (src == exportMenuItem) {
 			this.export();
+		} else if (src == prefMenuItem){
+			new ConfigurationDlg(this, true).setVisible(true);
+			SwingUtilities.updateComponentTreeUI(this);
 		}
 
 	}
