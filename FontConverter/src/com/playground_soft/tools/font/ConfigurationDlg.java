@@ -6,6 +6,7 @@
 package com.playground_soft.tools.font;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,26 +15,27 @@ import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.jvnet.substance.SubstanceLookAndFeel;
+import org.jvnet.substance.skin.SkinInfo;
+
 /**
  *
  * @author  Administrator
  */
 public class ConfigurationDlg extends javax.swing.JDialog {
-
-    private UIManager.LookAndFeelInfo lnfInfos[];
-
+	private Map<String, SkinInfo> skinInfoMap;
     /** Creates new form ConfigurationDlg */
     public ConfigurationDlg(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        lnfInfos = UIManager.getInstalledLookAndFeels();
-        Vector<String> lnfNames = new Vector<String>();
-        for (UIManager.LookAndFeelInfo info : lnfInfos) {
-            lnfNames.add((info.getName()));
-        }
-        lnfCb.setModel(new javax.swing.DefaultComboBoxModel(lnfNames));
-        LookAndFeel currentLnF = UIManager.getLookAndFeel();
-        lnfCb.setSelectedItem(currentLnF.getName());
+        skinInfoMap = SubstanceLookAndFeel.getAllSkins();
+        
+        String currentSkinName = Configuration.get("SkinName");
+        
+        skinCb.setModel(new javax.swing.DefaultComboBoxModel(skinInfoMap.keySet().toArray(new String[]{})));
+
+        if(currentSkinName != null)
+        	skinCb.setSelectedItem(currentSkinName);
     }
 
     /** This method is called from within the constructor to
@@ -47,7 +49,7 @@ public class ConfigurationDlg extends javax.swing.JDialog {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        lnfCb = new javax.swing.JComboBox();
+        skinCb = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -55,9 +57,9 @@ public class ConfigurationDlg extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Configuration");
 
-        jLabel1.setText("Look & Feel");
+        jLabel1.setText("Skin");
 
-        lnfCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        skinCb.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -67,7 +69,7 @@ public class ConfigurationDlg extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lnfCb, 0, 310, Short.MAX_VALUE)
+                .addComponent(skinCb, 0, 310, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -76,7 +78,7 @@ public class ConfigurationDlg extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(lnfCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(skinCb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(200, Short.MAX_VALUE))
         );
 
@@ -124,25 +126,10 @@ public class ConfigurationDlg extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            String lnfName = (String) lnfCb.getSelectedItem();
-
-            for (UIManager.LookAndFeelInfo info : lnfInfos) {
-                if (info.getName().equals(lnfName)) {
-                    try {
-                        UIManager.setLookAndFeel(info.getClassName());
-                        Configuration.set("LookAndFeelClassname", info.getClassName());
-                        break;
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(ConfigurationDlg.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (InstantiationException ex) {
-                        Logger.getLogger(ConfigurationDlg.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(ConfigurationDlg.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnsupportedLookAndFeelException ex) {
-                        Logger.getLogger(ConfigurationDlg.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
+            String skinName = (String) skinCb.getSelectedItem();
+            SkinInfo skin = skinInfoMap.get(skinName);
+            SubstanceLookAndFeel.setSkin(skin.getClassName());
+            Configuration.set("SkinName", skinName);
             Configuration.save();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -159,6 +146,6 @@ public class ConfigurationDlg extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JComboBox lnfCb;
+    private javax.swing.JComboBox skinCb;
     // End of variables declaration//GEN-END:variables
 }
