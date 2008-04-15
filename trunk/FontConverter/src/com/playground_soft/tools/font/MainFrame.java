@@ -111,8 +111,9 @@ public class MainFrame extends JXFrame implements ActionListener {
 		SubstanceLookAndFeel lookAndFeel = new SubstanceLookAndFeel();
 		Map<String, SkinInfo> skins = SubstanceLookAndFeel.getAllSkins();
 		String currentSkinName = Configuration.get("SkinName");
+		if(currentSkinName != null)
+			SubstanceLookAndFeel.setSkin(skins.get(currentSkinName).getClassName());
 		
-		SubstanceLookAndFeel.setSkin(skins.get(currentSkinName).getClassName());
 		UIManager.setLookAndFeel(lookAndFeel);
 
 		SwingUtilities.updateComponentTreeUI(this);
