@@ -30,77 +30,85 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import com.playground_soft.tools.font.GlyphRenderer;
+import com.playground_soft.tools.font.RasterGlyph;
 
 public class GlyphPanel extends JPanel {
-    private int character = 0;
-    private GlyphRenderer renderer;
-    private GlyphMetrics metrics;
+	private int character = 0;
+	private GlyphRenderer renderer;
+	private GlyphMetrics metrics;
 
-    public GlyphPanel(int character) {
-        super();
-        this.character = character;
-        setPreferredSize(new Dimension(100, 100));
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	public GlyphPanel(int character) {
+		super();
+		this.character = character;
+		setPreferredSize(new Dimension(100, 100));
+		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        GradientPaint fill = new GradientPaint(0f, 0f, Color.BLUE, 0, 50, Color.GREEN, true);
-        GradientPaint outline = new GradientPaint(0f, 0f, Color.GRAY, 0, 50, Color.BLACK, true);
+		GradientPaint fill = new GradientPaint(0f, 0f, Color.BLUE, 0, 50,
+				Color.GREEN, true);
+		GradientPaint outline = new GradientPaint(0f, 0f, Color.GRAY, 0, 50,
+				Color.BLACK, true);
 
-        renderer = new GlyphRenderer(fill, outline,
-                new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
-        setRenderer(renderer);
-        this.setOpaque(true);
-        
-    }
+		renderer = new GlyphRenderer(fill, outline, new BasicStroke(2.0f,
+				BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL));
+		setRenderer(renderer);
+		this.setOpaque(true);
 
-    @Override
-    public void setFont(Font font) {
-        super.setFont(font);
-        updateMetrics();
-    }
+	}
 
-    public Image getGlyphImage() {
-        return renderer.getGlyphImage();
-    }
+	@Override
+	public void setFont(Font font) {
+		super.setFont(font);
+		updateMetrics();
+	}
 
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+	public Image getGlyphImage() {
+		return renderer.getGlyphImage();
+	}
 
-        Dimension size = this.getSize();
-        Image image = renderer.getGlyphImage();
-        if(image == null)
-            return;
-        g.drawImage(image, (size.width - image.getWidth(null)) / 2,
-                (size.height - image.getHeight(null)) / 2,
-                null);
-    }
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 
-    public void setRenderer(GlyphRenderer renderer) {
-        this.renderer = renderer;
-        renderer.setFont(this.getFont());
-        updateMetrics();
-    }
+		Dimension size = this.getSize();
+		Image image = renderer.getGlyphImage();
+		if (image == null)
+			return;
+		g.drawImage(image, (size.width - image.getWidth(null)) / 2,
+				(size.height - image.getHeight(null)) / 2, null);
+	}
 
-    private void updateMetrics() {
-        Graphics2D graphic = (Graphics2D) this.getGraphics();
-        if (graphic == null) {
-            return;
-        }
-        renderer.setCharacter(character);
-        renderer.setFont(this.getFont());
+	public void setRenderer(GlyphRenderer renderer) {
+		this.renderer = renderer;
+		renderer.setFont(this.getFont());
+		updateMetrics();
+	}
 
-        metrics = renderer.getGlyphMetrics();
-        if (metrics != null) {
-            String tooltip = String.format(
-                    "Advance-X : %1$.2f, " +
-                    "Advance-y : %2$.2f, " +
-                    "Width : %3$.2f, " +
-                    "Height : %4$.2f ",
-                    metrics.getAdvanceX(), metrics.getAdvanceY(),
-                    metrics.getBounds2D().getWidth(),
-                    metrics.getBounds2D().getHeight());
+	private void updateMetrics() {
 
-            this.setToolTipText(tooltip);
-        }
-    }
+		Graphics2D graphic = (Graphics2D) this.getGraphics();
+		if (graphic == null) {
+			return;
+		}
+		renderer.setCharacter(character);
+		renderer.setFont(this.getFont());
+
+		metrics = renderer.getGlyphMetrics();
+		RasterGlyph glyph = renderer.getGlyph();
+
+		if (metrics != null) {
+			String tooltip = String.format(
+					"Char Code : %1$#06X, "
+					+ "Advance-X : %2$.2f, "
+					+ "Advance-y : %3$.2f, "
+					+ "Bearing-X : %4$.2f, " 
+					+ "Bearing-Y : %5$.2f ", 
+					glyph.getCharactor(), 
+					glyph.getMetrics().advanceX, 
+					glyph.getMetrics().advanceY, 
+					glyph.getMetrics().bearingX, 
+					glyph.getMetrics().bearingY);
+
+			this.setToolTipText(tooltip);
+		}
+	}
 }

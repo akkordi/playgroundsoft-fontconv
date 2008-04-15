@@ -44,13 +44,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.playground_soft.tools.font.paint.PaintFactory;
+import com.playground_soft.tools.font.paint.PaintFactoryModel;
 import com.playground_soft.tools.font.ui.EnumModel;
 import com.playground_soft.tools.font.ui.FontListCellRenderer;
 import com.playground_soft.tools.font.ui.FontPanel;
 import com.playground_soft.tools.font.ui.StrokeCapEnum;
 import com.playground_soft.tools.font.ui.StrokeJoinEnum;
-import com.playground_soft.tools.font.ui.paint.PaintFactory;
-import com.playground_soft.tools.font.ui.paint.PaintFactoryModel;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.error.ErrorInfo;
