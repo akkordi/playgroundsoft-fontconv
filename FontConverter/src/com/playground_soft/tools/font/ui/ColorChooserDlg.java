@@ -6,7 +6,7 @@
 
 package com.playground_soft.tools.font.ui;
 
-import com.playground_soft.tools.font.ui.paint.*;
+import com.playground_soft.tools.font.paint.*;
 import com.playground_soft.tools.font.ui.DialogResult;
 import java.awt.Color;
 
@@ -83,13 +83,11 @@ public class ColorChooserDlg extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void okBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okBtnActionPerformed
-        result = DialogResult.Accept;
         value = colorChooser.getColor();
         this.setVisible(false);
     }//GEN-LAST:event_okBtnActionPerformed
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
-        result = DialogResult.Reject;
          this.setVisible(false);
     }//GEN-LAST:event_cancelBtnActionPerformed
     
@@ -130,5 +128,4 @@ public class ColorChooserDlg extends javax.swing.JDialog {
     private javax.swing.JColorChooser colorChooser;
     private javax.swing.JButton okBtn;
     // End of variables declaration//GEN-END:variables
-    private DialogResult result = DialogResult.Accept;   
 }

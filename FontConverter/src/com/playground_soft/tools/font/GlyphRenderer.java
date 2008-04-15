@@ -34,6 +34,7 @@ public class GlyphRenderer {
     private Paint fillClr;
     private Paint outlineClr;
     private Stroke outlineStrk;
+    private AffineTransform af;
 
     public GlyphRenderer(Paint fillClr, Paint outlineClr, Stroke outlineStrk) {
         this.fillClr = fillClr;
@@ -57,6 +58,9 @@ public class GlyphRenderer {
         return image;
     }
 
+    public RasterGlyph getGlyph(){
+    	return new RasterGlyph(character, image, getGlyphMetrics(),af);
+    }
     public final void invalidate() {
         if (font == null || graphics2d == null) {
             return;
@@ -99,7 +103,7 @@ public class GlyphRenderer {
         }
         Shape outline = outlineStrk.createStrokedShape(shape);
         Rectangle rect = outline.getBounds();
-        AffineTransform af = new AffineTransform();
+        af = new AffineTransform();
         af.setToTranslation(-rect.x, -rect.y);
         graphic.setTransform(af);
         graphic.setStroke(outlineStrk);
