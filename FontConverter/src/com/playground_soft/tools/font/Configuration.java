@@ -14,7 +14,7 @@ import java.util.Properties;
 public class Configuration {
 
     private static Properties properties;
-    private static final String CONFIG_FILENAME = "config.conf";
+    private static final String CONFIG_FILENAME = "config.properties";
     private static File configFile = new File(CONFIG_FILENAME);
 
     public static void init() throws IOException {
