@@ -1,0 +1,1 @@
+Truetype font to Raster/Image font converter with glyph matrix. Including output customization. Suitable for game development
